@@ -66,7 +66,7 @@ if (!order) return res.status(404).json({ message: "Order not found" });
 const { status } = req.body;
 
 // Only pump owner can update
-if (req.user.role !== "pumpOwner" && req.user.role !== "admin") {
+if (req.user.role !== "pump_owner" && req.user.role !== "admin") {
   return res.status(403).json({ message: "Unauthorized" });
 }
 
