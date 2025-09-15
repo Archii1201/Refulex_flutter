@@ -17,7 +17,7 @@ app.use(require('morgan')('dev'));
 // import routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/pumps', require('./routes/pumpRoutes'));
-// app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
 
 // Socket.IO basic rooms/logic
 io.on('connection', socket => {
