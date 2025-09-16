@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const orderController = require("../controllers/orderController");
 const auth = require("../middlewares/auth");
+const orderController = require("../controllers/orderController");
 
-// POST /api/orders — create order
-router.post("/", auth(["customer"]), orderController.createOrder);
+// create order (customer) — auth required
+router.post("/", auth(["customer","pumpOwner","admin"]), orderController.createOrder);
 
-// PUT /api/orders/:id/status — update status
-router.put("/:id/status", auth(["pump_owner", "admin"]), orderController.updateOrderStatus);
+// update status (pump owner or admin) — auth required
+router.put("/:id/status", auth(["pumpOwner","admin"]), orderController.updateOrderStatus);
 
 module.exports = router;
