@@ -7,7 +7,8 @@ import 'providers/pump_provider.dart';
 import 'providers/order_provider.dart';
 
 import 'screens/auth/login_screen.dart';
-import 'screens/customer/map_screen.dart';
+import 'screens/auth/register_screen.dart';
+import 'screens/home/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         home: AuthOrHome(),
         routes: {
           '/login': (_) => LoginScreen(),
-          '/map': (_) => MapScreen(),
+          '/register': (_) => RegisterScreen(),
+          '/home': (_) => HomeScreen(),
         },
       ),
     );
@@ -58,7 +60,7 @@ class _AuthOrHomeState extends State<AuthOrHome> {
 
   Future<void> _checkAutoLogin() async {
     final auth = Provider.of<AuthProvider>(context, listen: false);
-    await auth.tryAutoLogin();
+    await auth.tryAutoLogin(); // check stored token or session
     setState(() => _isLoading = false);
   }
 
@@ -69,7 +71,7 @@ class _AuthOrHomeState extends State<AuthOrHome> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               CircularProgressIndicator(),
               SizedBox(height: 16),
               Text('Loading...'),
@@ -80,10 +82,7 @@ class _AuthOrHomeState extends State<AuthOrHome> {
     }
 
     final auth = Provider.of<AuthProvider>(context);
-    if (auth.isAuthenticated) {
-      return MapScreen();
-    } else {
-      return LoginScreen();
-    }
+    // If authenticated → Home, else → Login
+    return auth.isAuthenticated ? HomeScreen() : LoginScreen();
   }
 }

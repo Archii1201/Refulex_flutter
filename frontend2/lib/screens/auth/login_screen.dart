@@ -18,10 +18,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final res = await auth.login(emailCtrl.text.trim(), passCtrl.text.trim());
     setState(() => loading = false);
+
     if (res['success'] == true) {
-      Navigator.of(context).pushReplacementNamed('/map');
+      // ✅ Go to HomeScreen
+      Navigator.of(context).pushReplacementNamed('/home');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res['message'] ?? 'Login failed')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(res['message'] ?? 'Login failed')),
+      );
     }
   }
 
@@ -36,8 +40,18 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
             TextField(controller: passCtrl, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: loading ? null : _login, child: loading ? CircularProgressIndicator() : const Text('Login')),
-            TextButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => RegisterScreen())), child: const Text('Register')),
+            ElevatedButton(
+              onPressed: loading ? null : _login,
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : const Text('Login'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => RegisterScreen()),
+              ),
+              child: const Text('Register'),
+            ),
           ],
         ),
       ),

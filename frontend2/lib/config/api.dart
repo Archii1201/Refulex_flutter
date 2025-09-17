@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:5001';
-final Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+String get baseUrl => dotenv.env['API_BASE_URL'] ?? 'http://10.0.2.2:5001';
+
+Dio get dio => Dio(BaseOptions(baseUrl: baseUrl));
 
 void addAuthInterceptor() {
   dio.interceptors.clear();
