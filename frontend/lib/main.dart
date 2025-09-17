@@ -11,10 +11,11 @@ import 'screens/customer/map_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(MyApp());
+  runApp(MyApp()); // removed 'const' here
 }
 
 class MyApp extends StatelessWidget {
+  // Removed const constructor because MultiProvider uses dynamic providers
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
