@@ -58,5 +58,17 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+   void updateUser({required String name, required String email}) {
+    if (_user != null) {
+      _user = UserModel(
+        id: _user!.id,
+        name: name,
+        email: email,
+        role: _user!.role,
+      );
+      notifyListeners();
+    }
+  }
+
   String? get token => _token;
 }
