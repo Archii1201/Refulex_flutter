@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend2/config/api.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config/api.dart';
 
 class AuthProvider extends ChangeNotifier {
   UserModel? _user;
@@ -36,7 +36,8 @@ class AuthProvider extends ChangeNotifier {
     return {'success': false, 'message': res['message'] ?? 'Login failed'};
   }
 
-  Future<Map<String, dynamic>> register(String name, String email, String password, String role) async {
+  Future<Map<String, dynamic>> register(
+      String name, String email, String password, String role) async {
     final res = await AuthService().register(name, email, password, role);
     final token = res['token'] as String?;
     final userJson = res['user'] as Map<String, dynamic>?;
@@ -48,7 +49,10 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return {'success': true};
     }
-    return {'success': false, 'message': res['message'] ?? 'Registration failed'};
+    return {
+      'success': false,
+      'message': res['message'] ?? 'Registration failed'
+    };
   }
 
   Future<void> logout() async {
@@ -58,15 +62,21 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   void updateUser({required String name, required String email}) {
-    if (_user != null) {
-      _user = UserModel(
-        id: _user!.id,
-        name: name,
-        email: email,
-        role: _user!.role,
-      );
+  // ✅ FIXED: Now calls backend and updates DB
+  Future<void> updateUser({required String name, required String email}) async {
+    if (_user == null) return;
+
+    try {
+      final res = await AuthService().updateUser(_user!.id, {
+        "name": name,
+        "email": email,
+      });
+
+      // Backend returns { message, user }
+      _user = UserModel.fromJson(res["user"]);
       notifyListeners();
+    } catch (e) {
+      throw Exception("Failed to update profile: $e");
     }
   }
 
