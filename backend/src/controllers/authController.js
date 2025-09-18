@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 // Register
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role, location } = req.body;
+    const { name, email, password, role, lat, lng } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -22,7 +22,8 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      location
+      lat,
+      lng,
     });
     await user.save();
 
@@ -32,7 +33,14 @@ exports.register = async (req, res) => {
     res.status(201).json({
       message: "User registered successfully",
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        lat: user.lat,
+        lng: user.lng,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Error registering user", error: error.message });

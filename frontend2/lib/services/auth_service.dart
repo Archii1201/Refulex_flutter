@@ -15,17 +15,26 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> register(
-    String name,
-    String email,
-    String password,
-    String role,
-  ) async {
-    final res = await dio.post(
-      '/api/auth/register',
-      data: {'name': name, 'email': email, 'password': password, 'role': role},
-    );
-    return res.data as Map<String, dynamic>;
-  }
+  String name,
+  String email,
+  String password,
+  String role,
+  double lat,
+  double lng,
+) async {
+  final res = await dio.post(
+    '/api/auth/register',
+    data: {
+      'name': name,
+      'email': email,
+      'password': password,
+      'role': role,
+      'lat': lat,
+      'lng': lng,
+    },
+  );
+  return res.data as Map<String, dynamic>;
+}
 
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../owner/owner_home_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,8 +21,15 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => loading = false);
 
     if (res['success'] == true) {
-      // ✅ Go to HomeScreen
-      Navigator.of(context).pushReplacementNamed('/home');
+      final user = auth.user;
+
+      if (user?.role == "pump_owner") {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const OwnerHomeScreen()),
+        );
+      } else {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(res['message'] ?? 'Login failed')),
@@ -37,8 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
-            TextField(controller: passCtrl, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
+            TextField(
+              controller: emailCtrl,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: passCtrl,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: loading ? null : _login,

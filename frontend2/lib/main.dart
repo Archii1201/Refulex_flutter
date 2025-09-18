@@ -6,9 +6,13 @@ import 'providers/auth_provider.dart';
 import 'providers/pump_provider.dart';
 import 'providers/order_provider.dart';
 
+// customer screens
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/home/home_screen.dart';
+
+// pump owner screens
+import 'screens/owner/owner_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,7 +86,16 @@ class _AuthOrHomeState extends State<AuthOrHome> {
     }
 
     final auth = Provider.of<AuthProvider>(context);
-    // If authenticated → Home, else → Login
-    return auth.isAuthenticated ? HomeScreen() : LoginScreen();
+
+    if (!auth.isAuthenticated) {
+      return LoginScreen();
+    }
+
+    // ✅ role-based navigation
+    if (auth.user?.role == "pump_owner") {
+      return const OwnerHomeScreen();
+    } else {
+      return HomeScreen();
+    }
   }
 }

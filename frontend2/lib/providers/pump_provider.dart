@@ -19,4 +19,14 @@ class PumpProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> createPump(String name, double lat, double lng, double price) async {
+  try {
+    final newPump = await _service.createPump(name, lat, lng, price);
+    nearby.add(newPump); // ✅ add new pump to list
+    notifyListeners();
+  } catch (e) {
+    rethrow;
+  }
+}
 }

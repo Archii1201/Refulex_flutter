@@ -37,23 +37,30 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> register(
-      String name, String email, String password, String role) async {
-    final res = await AuthService().register(name, email, password, role);
-    final token = res['token'] as String?;
-    final userJson = res['user'] as Map<String, dynamic>?;
-    if (token != null && userJson != null) {
-      _token = token;
-      _user = UserModel.fromJson(userJson);
-      await AuthService.saveToken(token);
-      addAuthInterceptor();
-      notifyListeners();
-      return {'success': true};
-    }
-    return {
-      'success': false,
-      'message': res['message'] ?? 'Registration failed'
-    };
+  String name,
+  String email,
+  String password,
+  String role,
+  double lat,
+  double lng,
+) async {
+  final res = await AuthService().register(name, email, password, role, lat, lng);
+  final token = res['token'] as String?;
+  final userJson = res['user'] as Map<String, dynamic>?;
+
+  if (token != null && userJson != null) {
+    _token = token;
+    _user = UserModel.fromJson(userJson);
+    await AuthService.saveToken(token);
+    addAuthInterceptor();
+    notifyListeners();
+    return {'success': true};
   }
+  return {
+    'success': false,
+    'message': res['message'] ?? 'Registration failed'
+  };
+}
 
   Future<void> logout() async {
     await AuthService.removeToken();
